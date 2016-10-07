@@ -13,7 +13,10 @@ namespace CsvImporter
         {            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            PersonRepository db = new PersonRepository();
+
+            Application.Run(new DisplayCSV(db));
         }
        
     }
