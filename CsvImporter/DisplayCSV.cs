@@ -1,8 +1,9 @@
 ﻿using System.Windows.Forms;
 using System.IO;
-using System.Linq;
+using System.Text;
 using CsvHelper;
 using CsvHelper.Configuration;
+using System.Globalization;
 
 namespace CsvImporter
 {
@@ -17,54 +18,44 @@ namespace CsvImporter
             TestRead();
         }
 
-        public static void TestRead()
+        public void TestRead()
         {
-            //MutableDataTable dt = DataTable.New.ReadCsv(@"c:\Work\Project\CsvImporter\CsvImporter\csv\csv_example_utf8.txt");
-
-            //foreach (Row row in dt.Rows)
-            //{
-            //    Console.WriteLine(row["ФИО"]);
-            //}
-
-            using (TextReader textReader = File.OpenText(@"c:\Users\Сергей\Documents\Visual Studio 2015\Projects\CsvImporter\CsvImporter\csv\csv_example.txt"))
+            using (TextReader textReader = File.OpenText(@"..\..\csv\csv_example_utf8.txt"))
             {
-
                 var csv = new CsvReader(textReader);
-                csv.Configuration.RegisterClassMap<MyClassMap>();
+                csv.Configuration.Delimiter = "\t";
 
-                while (csv.Read())
-                {
-                    var record = csv.GetRecord<Person>();
+                csv.Configuration.RegisterClassMap<MyClassMap>();  
+                csv.Configuration.CultureInfo = CultureInfo.GetCultureInfo("ru-RU");
+                csv.Configuration.Encoding = Encoding.UTF8;
 
-                    using (var dbContext = new AppDbContext())
-                    {
-                        var dbPerson = (Person)record;                        
-                        dbContext.SaveChanges();
-                    }
+                #region by row
+                //using (var dbContext = new AppDbContext())
+                // {
+                //    while (csv.Read())
+                //    {
+                //        var record = csv.GetRecord<Person>();
+                //        var dbPerson = (Person)record;
 
-                    //db.SavePerson(record);
-                    //// Сохранить изменения в БД
-                    //db.SaveChanges();
-                    
-                }
+                //        dbContext.Persons.Add(dbPerson);
+                //        int recordsAffected = dbContext.SaveChanges();
+                //    }
+                //}
+                #endregion
 
-            }
-            //db.SavePerson(Person person);
+                #region by range
+                //using (var dbContext = new AppDbContext())
+                //{
+                //    var records = csv.GetRecords<Person>();                    
+                //    dbContext.Persons.AddRange(records);
+                //    int recordsAffected = dbContext.SaveChanges();
+                //}
+                #endregion
 
-            //DbSet.AddRange
-            //var dbContext = new MyDbContext();
-            //Отключаем автоматическое слежение за изменениями
-            //dbContext.Configuration.AutoDetectChangesEnabled = false;
-            //Добавляем большое число записей в некоторую таблицу
-            //for (var i = 0; i < 1000; i++)
-            //{
-            //    dbContext.People.Add(new Person());//теперь этот метод работает значительно быстрее
-            //}
-            //dbContext.ChangeTracker.DetectChanges(); //Обновляем сведения об изменениях. Работает быстро
-            //Сохраняем изменения в БД
-            //dbContext.SaveChanges();
+                var records = csv.GetRecords<Person>();
+                db.SavePersons(records);
+            }           
         }
-
 
         public sealed class MyClassMap : CsvClassMap<Person>
         {
@@ -72,9 +63,10 @@ namespace CsvImporter
             {
                 Map(m => m.FIO).Name("ФИО");
                 Map(m => m.Phone).Name("Телефон");
+                Map(m => m.Birthday).Name("Дата рождения");
+                Map(m => m.Email).Name("Email");                                
             }
         }
-
 
     }
 }
