@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace CsvImporter
 {
     public interface IPersonRepository
     {
-        Person GetElement(int elementId);
+        Person GetPerson(int elementId);
+        List<Person> GetPersons();
 
         void SavePerson(Person person);
 
-        void SavePersons(IEnumerable<Person> persons);
+        int SavePersons(IEnumerable<Person> persons);
     }
 }
 

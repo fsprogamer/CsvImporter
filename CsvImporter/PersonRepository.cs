@@ -5,11 +5,22 @@ namespace CsvImporter
 {
     class PersonRepository : IPersonRepository
     {
-        public Person GetElement(int id)
+        //private AppDbContext dbContext;
+
+        public Person GetPerson(int id)
         {
             using (var dbContext = new AppDbContext())
             {
                 var person = dbContext.Persons.First(p => p.Id == id);
+                return person;
+            }
+        }
+
+        public List<Person> GetPersons()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var person = dbContext.Persons.ToList();
                 return person;
             }
         }
@@ -24,14 +35,15 @@ namespace CsvImporter
             }
         }
 
-        public void SavePersons(IEnumerable<Person> persons)
+        public int SavePersons(IEnumerable<Person> persons)
         {
+            int recordsAffected;
             using (var dbContext = new AppDbContext())
             {
-                //var records = persons;
                 dbContext.Persons.AddRange(persons);
-                int recordsAffected = dbContext.SaveChanges();
+                recordsAffected = dbContext.SaveChanges();
             }
+            return recordsAffected;
         }
     }
 }

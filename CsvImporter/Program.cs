@@ -15,8 +15,9 @@ namespace CsvImporter
             Application.SetCompatibleTextRenderingDefault(false);
 
             PersonRepository db = new PersonRepository();
+            CSVReader reader = new CSVReader();
 
-            Application.Run(new DisplayCSV(db));
+            Application.Run(new DisplayCSVForm(db, reader));
         }
        
     }
