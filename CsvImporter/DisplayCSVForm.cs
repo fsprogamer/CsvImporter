@@ -63,7 +63,7 @@ namespace CsvImporter
 
         private void CorrectWindowSize()
         {
-            int width = WinObjMethods.CountGridWidth(dataGridView);
+            int width = WinObjMethods.CountGridWidth(dataGridView);            
             ClientSize = new Size(width, ClientSize.Height);
             MinimumSize = new Size(width, ClientSize.Height);
         }
@@ -71,7 +71,10 @@ namespace CsvImporter
         private void importToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             ReadCSV();            
-            BindConnectionGrid(ref dataGridView);            
+            BindConnectionGrid(ref dataGridView);
+            dataGridView.AutoResizeColumns();
+            WinObjMethods.ResizeGrid(ref dataGridView);
+            CorrectWindowSize();
         }
 
         private void exitToolStripMenuItem_Click(object sender, System.EventArgs e)

@@ -1,5 +1,5 @@
 ﻿using CsvHelper.Configuration;
-
+ 
 namespace CsvImporter
 {
     public sealed class MyClassMap : CsvClassMap<Person>

@@ -4,7 +4,7 @@ namespace CsvImporter
 {
    public class AppDbContext : DbContext
     {
-        public AppDbContext() : base("PersonDB")
+        public AppDbContext() : base("AppDbContext")
         { }
 
         public DbSet<Person> Persons { get; set; }        
