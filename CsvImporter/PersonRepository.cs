@@ -25,14 +25,19 @@ namespace CsvImporter
             }
         }
 
-        public void SavePerson(Person person)
-        {            
+        public int SavePerson(Person person)
+        {
+            int recordsAffected;
             using (var dbContext = new AppDbContext())
             {
                 var dbPerson = dbContext.Persons.First(p => p.Id == person.Id);
                 dbPerson.FIO = person.FIO;
-                dbContext.SaveChanges();
+                dbPerson.Phone = person.Phone;
+                dbPerson.Email = person.Email;
+                dbPerson.Birthday = person.Birthday;
+                recordsAffected = dbContext.SaveChanges();
             }
+            return recordsAffected;
         }
 
         public int SavePersons(IEnumerable<Person> persons)

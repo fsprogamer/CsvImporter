@@ -8,7 +8,7 @@ namespace CsvImporter
         Person GetPerson(int elementId);
         List<Person> GetPersons();
 
-        void SavePerson(Person person);
+        int SavePerson(Person person);
 
         int SavePersons(IEnumerable<Person> persons);
     }

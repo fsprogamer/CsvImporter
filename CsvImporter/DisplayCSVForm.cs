@@ -93,5 +93,20 @@ namespace CsvImporter
             EditPersonForm editForm = new EditPersonForm();
             editForm.Show();
         }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Validate();
+            foreach (DataGridViewRow row in dataGridView.Rows)
+            {
+                Person person = (Person)row.DataBoundItem;
+                db.SavePerson(person);
+            }
+
+            //BindingList<Person> persons = BindingList<Person> dataGridView.DataSource;
+            //db.SavePersons(persons);
+
+            dataGridView.Refresh();
+        }
     }
 }
