@@ -1,8 +1,11 @@
 ﻿using System.Windows.Forms;
 using System;
 using System.Reflection;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace CsvImporter
 {
@@ -45,11 +48,16 @@ namespace CsvImporter
         //    return null;
         //}
 
-        //private static string ColumnNameFactory(this Type type, string propertyName)
+        //private static string ColumnNameFactory(Type type, string propertyName)
         //{
         //    string columnName = propertyName;
-        //    Type entityType = type.GetEntityType();
-        //    var columnAttribute = entityType.GetProperty(propertyName).GetCustomAttribute<ColumnAttribute>(false);
+        //    Type entityType = type.GetType(); //.GetEntityType();
+
+        //    var columnAttribute = entityType..GetProperty(propertyName);
+
+        //    bool isDef = Attribute.IsDefined(mInfo, typeof(ObsoleteAttribute));
+
+        //    var columnAttribute = entityType.GetProperty(propertyName).GetCustomAttribute(false);
         //    if (columnAttribute != null && !string.IsNullOrEmpty(columnAttribute.Name))
         //    {
         //        columnName = columnAttribute.Name;
@@ -72,84 +80,77 @@ namespace CsvImporter
             
             dgv.AutoGenerateColumns = false;
 
-            Type type = typeof(Person);
-            MemberInfo[] members = type.GetMembers();
-            string[] localizedName = new string[members.Length];
-            for (int num = 0; num < members.Length; num++)
-            {                
-                localizedName[num] = GetDisplayName<Person, string>(i => members[num].Name);
-            }
-
-            //var attribute = Attribute.GetCustomAttribute(((MemberExpression)expression.Body).Member, typeof(DisplayAttribute)) as DisplayAttribute;
-
-            //Person person = new Person();
-
             //Type type = typeof(Person);
             //MemberInfo[] members = type.GetMembers();
+            //PropertyInfo[] propinfolist = type.GetProperties();
+            //var columnAttribute = propinfo.GetCustomAttributes(typeof(DisplayAttribute), true).Cast<DisplayAttribute>().Single().Name;
 
-            //// Display the attributes for each of the members of MyClass1.
-            //for (int i = 0; i < members.Length; i++)
-            //{
-            //    Object[] myAttributes = members[i].GetCustomAttributes(true);
-            //    if (myAttributes.Length > 0)
-            //    {
-            //        Console.WriteLine("\nThe attributes for the member {0} are: \n", members[i]);
-            //        for (int j = 0; j < myAttributes.Length; j++)
-            //            Console.WriteLine("The type of the attribute is {0}.", myAttributes[j]);
-            //    }
-            //}
-
-           // var barProperty = person.GetType().GetProperty("FIO").GetCustomAttributes(false);
-            //string s = barProperty.GetValue(person, null) as string;
-                      
-            //typeof(Person)
-            //.GetProperties()
-            //.Select(x => x.GetCustomAttribute(true)())
-            //.Where(x => x != null)
-            //.Select(x => x.Name);
-
-
-            //create the column programatically
             DataGridViewCell cell = new DataGridViewTextBoxCell();
-            DataGridViewTextBoxColumn colName = new DataGridViewTextBoxColumn()
-            {
-                CellTemplate = cell,
-                Name = "FIO",
-                HeaderText = "ФИО",
-                DataPropertyName = "FIO", // Tell the column which property it should use
-                AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.AllCells,                
-            };
-            dgv.Columns.Add(colName);
 
-            colName = new DataGridViewTextBoxColumn()
+            var properties = typeof(Person).GetProperties()
+                                           .Where(p => p.IsDefined(typeof(DisplayAttribute), false))
+                                           .Select(p => new
+                                           {
+                                               PropertyName = p.Name,
+                                               p.GetCustomAttributes(typeof(DisplayAttribute),
+                                              false).Cast<DisplayAttribute>().Single().Name
+                                           });
+            foreach (var propinfo in properties)
             {
-                CellTemplate = cell,
-                Name = "Birthday",
-                HeaderText = "Дата рождения",
-                DataPropertyName = "Birthday", // Tell the column which property it should use
-                AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.AllCells
-            };
-            dgv.Columns.Add(colName);
+                    DataGridViewTextBoxColumn colName = new DataGridViewTextBoxColumn()
+                    {
+                        CellTemplate = cell,
+                        Name = propinfo.PropertyName,
+                        HeaderText = propinfo.Name.ToString(),
+                        DataPropertyName = propinfo.PropertyName, 
+                        AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.AllCells,
+                    };
+                    dgv.Columns.Add(colName);
+            }
 
-            colName = new DataGridViewTextBoxColumn()
-            {
-                CellTemplate = cell,
-                Name = "Email",
-                HeaderText = "Email",
-                DataPropertyName = "Email", // Tell the column which property it should use
-                AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.AllCells
-            };
-            dgv.Columns.Add(colName);
+            dgv.Columns[dgv.ColumnCount - 1].AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.Fill;
+            
+            //create the column programatically
+            //DataGridViewCell cell = new DataGridViewTextBoxCell();
+            //DataGridViewTextBoxColumn colName = new DataGridViewTextBoxColumn()
+            //{
+            //    CellTemplate = cell,
+            //    Name = "FIO",
+            //    HeaderText = "ФИО",
+            //    DataPropertyName = "FIO", // Tell the column which property it should use
+            //    AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.AllCells,                
+            //};
+            //dgv.Columns.Add(colName);
 
-            colName = new DataGridViewTextBoxColumn()
-            {
-                CellTemplate = cell,
-                Name = "Phone",
-                HeaderText = "Телефон",
-                DataPropertyName = "Phone", // Tell the column which property it should use
-                AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.Fill
-            };
-            dgv.Columns.Add(colName);
+            //colName = new DataGridViewTextBoxColumn()
+            //{
+            //    CellTemplate = cell,
+            //    Name = "Birthday",
+            //    HeaderText = "Дата рождения",
+            //    DataPropertyName = "Birthday", // Tell the column which property it should use
+            //    AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.AllCells
+            //};
+            //dgv.Columns.Add(colName);
+
+            //colName = new DataGridViewTextBoxColumn()
+            //{
+            //    CellTemplate = cell,
+            //    Name = "Email",
+            //    HeaderText = "Email",
+            //    DataPropertyName = "Email", // Tell the column which property it should use
+            //    AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.AllCells
+            //};
+            //dgv.Columns.Add(colName);
+
+            //colName = new DataGridViewTextBoxColumn()
+            //{
+            //    CellTemplate = cell,
+            //    Name = "Phone",
+            //    HeaderText = "Телефон",
+            //    DataPropertyName = "Phone", // Tell the column which property it should use
+            //    AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.Fill
+            //};
+            //dgv.Columns.Add(colName);
 
         }
       
