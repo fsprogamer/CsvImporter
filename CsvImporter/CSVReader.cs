@@ -11,13 +11,14 @@ namespace CsvImporter
     {
         private TextReader _textReader;
 
-        public void OpenFile()
+        public void OpenFile(string filename)
         {
-            _textReader = File.OpenText(Properties.Settings.Default.CSVPath);
+            _textReader = File.OpenText(filename);
         }
 
         public void CloseFile()
         {
+            if(_textReader!=null)
             _textReader.Close();
         }
         public IEnumerable<Person> GetPersons()

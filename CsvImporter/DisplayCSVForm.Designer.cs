@@ -32,9 +32,10 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataGridView = new System.Windows.Forms.DataGridView();
             this.данныеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.menuStripImport.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -62,16 +63,31 @@
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.importToolStripMenuItem.Text = "Импорт";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.exitToolStripMenuItem.Text = "Выход";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // данныеToolStripMenuItem
+            // 
+            this.данныеToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem});
+            this.данныеToolStripMenuItem.Name = "данныеToolStripMenuItem";
+            this.данныеToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
+            this.данныеToolStripMenuItem.Text = "Данные";
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+            this.saveToolStripMenuItem.Text = "Сохранить";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // dataGridView
             // 
@@ -87,22 +103,11 @@
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.Size = new System.Drawing.Size(697, 257);
             this.dataGridView.TabIndex = 1;
-            this.dataGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellContentDoubleClick);
             // 
-            // данныеToolStripMenuItem
+            // openFileDialog
             // 
-            this.данныеToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveToolStripMenuItem});
-            this.данныеToolStripMenuItem.Name = "данныеToolStripMenuItem";
-            this.данныеToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
-            this.данныеToolStripMenuItem.Text = "Данные";
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
-            this.saveToolStripMenuItem.Text = "Сохранить";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            this.openFileDialog.FileName = "openFileDialog";
+            this.openFileDialog.Title = "Выберите файл для импорта";
             // 
             // DisplayCSVForm
             // 
@@ -114,6 +119,7 @@
             this.MainMenuStrip = this.menuStripImport;
             this.Name = "DisplayCSVForm";
             this.Text = "Импорт CSV";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DisplayCSVForm_FormClosing);
             this.Load += new System.EventHandler(this.DisplayCSV_Load);
             this.menuStripImport.ResumeLayout(false);
             this.menuStripImport.PerformLayout();
@@ -132,6 +138,7 @@
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.ToolStripMenuItem данныеToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }
 

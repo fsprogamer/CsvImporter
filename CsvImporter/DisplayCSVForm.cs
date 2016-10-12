@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System;
+using System.Data.Entity.Validation;
 
 namespace CsvImporter
 {
@@ -21,41 +22,72 @@ namespace CsvImporter
         private void DisplayCSV_Load(object sender, System.EventArgs e)
         {
             WinObjMethods.AddColumn(ref dataGridView);
-            BindConnectionGrid(ref dataGridView);            
+            try
+            {
+                db.OpenContext();
+                BindGrid(ref dataGridView);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
             dataGridView.AutoResizeColumns();
             WinObjMethods.ResizeGrid(ref dataGridView);
             CorrectWindowSize();
         }
 
-        public void ReadCSV()
+        public void ReadCSV(string filename)
         {
+            int records_imported = 0;
             this.Cursor = Cursors.WaitCursor;
             try
             {
-                reader.OpenFile();
-                var records = reader.GetPersons();          
-                db.SavePersons(records);
+                reader.OpenFile(filename);
+                var records = reader.GetPersons();
+                records_imported = db.SavePersons(records);
+                MessageBox.Show("Загружено " + records_imported.ToString() + " записей");
+            }
+            catch (DbEntityValidationException ex)
+            {
+                string errValString="";
+                foreach (DbEntityValidationResult validationError in ex.EntityValidationErrors)
+                {
+                    errValString += validationError.Entry.Entity.ToString();
+                    errValString += "\n";
+                    foreach (DbValidationError err in validationError.ValidationErrors)
+                    {
+                        errValString += err.ErrorMessage;
+                        errValString += "\n";
+                    }
+                }
+                MessageBox.Show(errValString);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
                 reader.CloseFile();
             }
-           catch (Exception ex)
-           {
-              MessageBox.Show(ex.ToString());
-           }
-           finally
-           {
-            this.Cursor = Cursors.Default;
-           }
         }
 
-
-        private void BindConnectionGrid(ref DataGridView dgv)
+        private void BindGrid(ref DataGridView dgv)
         {
-            List<Person> persons = db.GetPersons();
+            List<Person> persons = null;
 
-            if (persons.Count > 0)
+            try { 
+                persons = db.GetPersons();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+
+            if (persons == null || persons.Count > 0)
             {
                 var bindsList = new BindingList<Person>(persons);
-                //Bind BindingList directly to the DataGrid
                 var source = new BindingSource(bindsList, null);
                 dgv.DataSource = source;
             }
@@ -70,11 +102,21 @@ namespace CsvImporter
 
         private void importToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            ReadCSV();            
-            BindConnectionGrid(ref dataGridView);
-            dataGridView.AutoResizeColumns();
-            WinObjMethods.ResizeGrid(ref dataGridView);
-            CorrectWindowSize();
+            
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = Properties.Settings.Default.CSVPath;
+            openFileDialog.Filter = "CSV файлы|*.csv|Текстовые файлы|*.txt";
+
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {                
+                ReadCSV(openFileDialog.FileName);
+
+                BindGrid(ref dataGridView);
+
+                dataGridView.AutoResizeColumns();
+                WinObjMethods.ResizeGrid(ref dataGridView);
+                CorrectWindowSize();
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, System.EventArgs e)
@@ -82,31 +124,29 @@ namespace CsvImporter
             this.Close();
         }
 
-        private void dataGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-            EditPersonForm editForm = new EditPersonForm();
-            editForm.Show();
-        }
-
-        private void редактироватьToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            EditPersonForm editForm = new EditPersonForm();
-            editForm.Show();
-        }
-
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Validate();
-            foreach (DataGridViewRow row in dataGridView.Rows)
-            {
-                Person person = (Person)row.DataBoundItem;
-                db.SavePerson(person);
+            try { 
+                db.SaveChanges();
+                dataGridView.Refresh();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }            
+        }
 
-            //BindingList<Person> persons = BindingList<Person> dataGridView.DataSource;
-            //db.SavePersons(persons);
-
-            dataGridView.Refresh();
+        private void DisplayCSVForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                db.CloseContext();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
     }
 }
