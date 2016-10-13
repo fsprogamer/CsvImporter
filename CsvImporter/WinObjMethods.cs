@@ -27,16 +27,6 @@ namespace CsvImporter
             }
         }
 
-        public static string GetDisplayName<TSource, TProperty>(Expression<Func<TSource, TProperty>> expression)
-        {
-            var attribute = Attribute.GetCustomAttribute(((MemberExpression)expression.Body).Member, typeof(DisplayAttribute)) as DisplayAttribute;
-            if (attribute == null)
-            {
-                return null;
-            }
-            return attribute.GetName();
-        }
-
         public static void AddColumn(ref DataGridView dgv)
         {            
             dgv.AutoGenerateColumns = false;
