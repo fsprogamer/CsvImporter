@@ -1,13 +1,12 @@
 ﻿using System.IO;
 using System.Text;
 using CsvHelper;
-using CsvHelper.Configuration;
 using System.Globalization;
 using System.Collections.Generic;
 
 namespace CsvImporter
 {
-    class CSVReader : ICSVReader
+    public class CSVReader : ICSVReader
     {
         private TextReader _textReader;
 

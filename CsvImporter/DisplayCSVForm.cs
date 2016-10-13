@@ -12,6 +12,9 @@ namespace CsvImporter
         private IPersonRepository db;
         private ICSVReader reader;
 
+        public DisplayCSVForm()
+        {
+        }
         public DisplayCSVForm(IPersonRepository dbparam, ICSVReader readerparam)
         {
             db = dbparam;
@@ -36,7 +39,7 @@ namespace CsvImporter
             CorrectWindowSize();
         }
 
-        public void ReadCSV(string filename)
+        public int ReadCSV(string filename)
         {
             int records_imported = 0;
             this.Cursor = Cursors.WaitCursor;
@@ -46,6 +49,7 @@ namespace CsvImporter
                 var records = reader.GetPersons();
                 records_imported = db.SavePersons(records);
                 MessageBox.Show("Загружено " + records_imported.ToString() + " записей");
+                return records_imported;
             }
             catch (DbEntityValidationException ex)
             {
@@ -61,15 +65,17 @@ namespace CsvImporter
                     }
                 }
                 MessageBox.Show(errValString);
+                return records_imported;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
+                return records_imported;
             }
             finally
             {
                 this.Cursor = Cursors.Default;
-                reader.CloseFile();
+                reader.CloseFile();                
             }
         }
 
@@ -110,7 +116,9 @@ namespace CsvImporter
             if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {                
                 ReadCSV(openFileDialog.FileName);
+                db.CloseContext();
 
+                db.OpenContext();
                 BindGrid(ref dataGridView);
 
                 dataGridView.AutoResizeColumns();
@@ -126,15 +134,28 @@ namespace CsvImporter
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
             this.Validate();
-            try { 
+
+            try
+            {
                 db.SaveChanges();
                 dataGridView.Refresh();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in entityValidationErrors.ValidationErrors)
+                    {
+                        MessageBox.Show("Свойство: " + validationError.PropertyName + " Ошибка: " + validationError.ErrorMessage);
+                    }
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
-            }            
+            }
         }
 
         private void DisplayCSVForm_FormClosing(object sender, FormClosingEventArgs e)

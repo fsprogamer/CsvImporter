@@ -1,11 +1,8 @@
 ﻿using System.Windows.Forms;
 using System;
-using System.Reflection;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
 using System.Linq;
-using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace CsvImporter
 {
@@ -30,41 +27,6 @@ namespace CsvImporter
             }
         }
 
-        //public static string GetDisplayAttributeValue()
-        //{
-        //    System.Attribute[] attrs =
-        //            System.Attribute.GetCustomAttributes(typeof(CsvImporter.Person));
-
-        //    foreach (System.Attribute attr in attrs)
-        //    {
-        //        //var displayAttribute as Display;
-        //        //if (displayAttribute == null)
-        //        //    continue;
-        //        //return displayAttribute.GetName();
-        //        return null;
-        //    }
-
-        //    // throw not found exception or just return string.Empty
-        //    return null;
-        //}
-
-        //private static string ColumnNameFactory(Type type, string propertyName)
-        //{
-        //    string columnName = propertyName;
-        //    Type entityType = type.GetType(); //.GetEntityType();
-
-        //    var columnAttribute = entityType..GetProperty(propertyName);
-
-        //    bool isDef = Attribute.IsDefined(mInfo, typeof(ObsoleteAttribute));
-
-        //    var columnAttribute = entityType.GetProperty(propertyName).GetCustomAttribute(false);
-        //    if (columnAttribute != null && !string.IsNullOrEmpty(columnAttribute.Name))
-        //    {
-        //        columnName = columnAttribute.Name;
-        //    }
-        //    return columnName;
-        //}
-
         public static string GetDisplayName<TSource, TProperty>(Expression<Func<TSource, TProperty>> expression)
         {
             var attribute = Attribute.GetCustomAttribute(((MemberExpression)expression.Body).Member, typeof(DisplayAttribute)) as DisplayAttribute;
@@ -76,15 +38,8 @@ namespace CsvImporter
         }
 
         public static void AddColumn(ref DataGridView dgv)
-        {
-            
+        {            
             dgv.AutoGenerateColumns = false;
-
-            //Type type = typeof(Person);
-            //MemberInfo[] members = type.GetMembers();
-            //PropertyInfo[] propinfolist = type.GetProperties();
-            //var columnAttribute = propinfo.GetCustomAttributes(typeof(DisplayAttribute), true).Cast<DisplayAttribute>().Single().Name;
-
             DataGridViewCell cell = new DataGridViewTextBoxCell();
 
             var properties = typeof(Person).GetProperties()
@@ -107,51 +62,7 @@ namespace CsvImporter
                     };
                     dgv.Columns.Add(colName);
             }
-
-            dgv.Columns[dgv.ColumnCount - 1].AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.Fill;
-            
-            //create the column programatically
-            //DataGridViewCell cell = new DataGridViewTextBoxCell();
-            //DataGridViewTextBoxColumn colName = new DataGridViewTextBoxColumn()
-            //{
-            //    CellTemplate = cell,
-            //    Name = "FIO",
-            //    HeaderText = "ФИО",
-            //    DataPropertyName = "FIO", // Tell the column which property it should use
-            //    AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.AllCells,                
-            //};
-            //dgv.Columns.Add(colName);
-
-            //colName = new DataGridViewTextBoxColumn()
-            //{
-            //    CellTemplate = cell,
-            //    Name = "Birthday",
-            //    HeaderText = "Дата рождения",
-            //    DataPropertyName = "Birthday", // Tell the column which property it should use
-            //    AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.AllCells
-            //};
-            //dgv.Columns.Add(colName);
-
-            //colName = new DataGridViewTextBoxColumn()
-            //{
-            //    CellTemplate = cell,
-            //    Name = "Email",
-            //    HeaderText = "Email",
-            //    DataPropertyName = "Email", // Tell the column which property it should use
-            //    AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.AllCells
-            //};
-            //dgv.Columns.Add(colName);
-
-            //colName = new DataGridViewTextBoxColumn()
-            //{
-            //    CellTemplate = cell,
-            //    Name = "Phone",
-            //    HeaderText = "Телефон",
-            //    DataPropertyName = "Phone", // Tell the column which property it should use
-            //    AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.Fill
-            //};
-            //dgv.Columns.Add(colName);
-
+            dgv.Columns[dgv.ColumnCount - 1].AutoSizeMode = DataGridViewAutoSize‌​ColumnMode.Fill;                       
         }
       
     }

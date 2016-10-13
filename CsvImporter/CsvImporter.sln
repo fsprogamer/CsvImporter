@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvImporter", "CsvImporter.csproj", "{FB260513-3F02-43CC-801F-2CBFD8493DA5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject", "..\UnitTestProject\UnitTestProject.csproj", "{11E50E93-4548-4EB9-B4A1-0E28F2645D1A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{FB260513-3F02-43CC-801F-2CBFD8493DA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB260513-3F02-43CC-801F-2CBFD8493DA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB260513-3F02-43CC-801F-2CBFD8493DA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11E50E93-4548-4EB9-B4A1-0E28F2645D1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11E50E93-4548-4EB9-B4A1-0E28F2645D1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11E50E93-4548-4EB9-B4A1-0E28F2645D1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11E50E93-4548-4EB9-B4A1-0E28F2645D1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

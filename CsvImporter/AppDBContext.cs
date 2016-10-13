@@ -7,6 +7,7 @@ namespace CsvImporter
         public AppDbContext() : base("AppDbContext")
         { }
 
-        public DbSet<Person> Persons { get; set; }        
+        public DbSet<Person> Persons { get; set; }
+
     }
 }
